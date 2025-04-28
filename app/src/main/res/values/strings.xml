@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Application relevés des vannes</string>
+    <string name="action_menu1">Gérer les relevés des vannes</string>
+    <string name="action_menu2">Importer les données</string>
+    <string name="action_menu3">Exporter les données</string>
+    <string name="listeCommunes">Liste des Communes</string>
+    <string name="listeSecteurs">Liste des Secteurs</string>
+    <string name="listeVannes">Liste des Vannes</string>
+    <string name="releve">Liste des Relevés</string>
+    <string name="titre_liste_communes">Liste des communes du Gévaudan</string>
+    <string name="ajoutReleve">Ajouter un nouveau relevé</string>
+</resources>

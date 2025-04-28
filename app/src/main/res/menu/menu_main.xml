@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.btssio.appli_gest_vannes.MainActivity">
+
+    <item
+        android:id="@+id/menu_releves"
+        android:title="@string/action_menu1"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_import"
+        android:title="@string/action_menu2"
+        android:orderInCategory="101"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_export"
+        android:title="@string/action_menu3"
+        android:orderInCategory="102"
+        app:showAsAction="never" />
+</menu>
