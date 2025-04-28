@@ -35,8 +35,9 @@ public class ReleveActivity extends AppCompatActivity {
         boolean inCurrentYear = false;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        FloatingActionButton fab = this.findViewById(R.id.FabAddReleve);
         setContentView(R.layout.activity_releve);
+        
+        FloatingActionButton fab = this.findViewById(R.id.FabAddReleve);
 
         LibCompteurVanne laVanne = (LibCompteurVanne) this.getIntent().getExtras().getSerializable("releve");
         List<LibReleve> listeReleves = ReleveDAO.getArrayReleve(laVanne, ReleveActivity.this);
@@ -67,23 +68,23 @@ public class ReleveActivity extends AppCompatActivity {
 
         if (inCurrentYear) {
             fab.hide();
+        } else {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LocalDate date = LocalDate.now();
+                    int indexReleve = listeReleves.get(0).getIndexReleve();
+                    LibCompteurVanne vanne = listeReleves.get(0).getLeCompteur();
+
+                    Intent intentAddReleve = new Intent(ReleveActivity.this, AjoutReleveActivity.class);
+                    intentAddReleve.putExtra("date", ConversionDate.dateToString(date, "dd/MM/yyyy"));
+                    intentAddReleve.putExtra("indexReleve", indexReleve);
+                    intentAddReleve.putExtra("vanne", vanne);
+
+                    startActivity(intentAddReleve);
+                }
+            });
         }
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LocalDate date = LocalDate.now();
-                int indexReleve = listeReleves.get(0).getIndexReleve();
-                LibCompteurVanne vanne = listeReleves.get(0).getLeCompteur();
-
-                Intent intentAddReleve = new Intent(ReleveActivity.this, AjoutReleveActivity.class);
-                intentAddReleve.putExtra("date", ConversionDate.dateToString(date, "dd/MM/yyyy"));
-                intentAddReleve.putExtra("indexReleve", indexReleve);
-                intentAddReleve.putExtra("vanne", vanne);
-
-                startActivity(intentAddReleve);
-            }
-        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

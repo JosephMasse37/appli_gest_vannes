@@ -16,6 +16,7 @@
             android:name=".AjoutReleveActivity"
             android:label="@string/ajoutReleveLabel"
             android:parentActivityName=".ListeCommunes"
+            android:theme="@style/Theme.EmptyView"
             android:exported="false" />
         <activity
             android:name=".ReleveActivity"

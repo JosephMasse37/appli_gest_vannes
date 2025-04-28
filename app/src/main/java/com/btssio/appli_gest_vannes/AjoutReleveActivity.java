@@ -53,12 +53,16 @@ public class AjoutReleveActivity extends AppCompatActivity {
         txtNewIndex.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                int newIndex = Integer.parseInt(txtNewIndex.getText().toString());
-                if (newIndex < oldIndex) {
-                    txtConso.setText("Erreur : Nouvel index trop petit.");
-                } else {
-                    int conso = newIndex - oldIndex;
-                    txtConso.setText("Consommation : " + conso);
+                try {
+                    int newIndex = Integer.parseInt(txtNewIndex.getText().toString());
+                    if (newIndex < oldIndex) {
+                        txtConso.setText("Nouvel index trop petit.");
+                    } else {
+                        int conso = newIndex - oldIndex;
+                        txtConso.setText("Consommation : " + conso);
+                    }
+                } catch (Exception e) {
+                    txtConso.setText("");
                 }
                 return false;
             }
