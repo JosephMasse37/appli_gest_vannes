@@ -52,7 +52,7 @@ public class ReleveDAO {
         value.put(RELEVE_DATE, ConversionDate.dateToString(r.getDateReleve(), "dd/MM/yyyy"));
         value.put(RELEVE_COMPTEUR, r.getLeCompteur().getRefCompteur());
 
-        retour = bd.insert("client", null, value);
+        retour = bd.insert("releve", null, value);
         return retour;
     }
 }
