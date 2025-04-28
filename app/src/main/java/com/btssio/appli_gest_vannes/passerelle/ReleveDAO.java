@@ -1,5 +1,6 @@
 package com.btssio.appli_gest_vannes.passerelle;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReleveDAO {
+    public static final String RELEVE_INDEX = "indexR";
+    public static final String RELEVE_DATE = "dateReleve";
+    public static final String RELEVE_COMPTEUR = "ref";
     public static List<LibReleve> getArrayReleve(LibCompteurVanne leCompteur, Context ct) {
         BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
         List<LibReleve> listeReleves = new ArrayList<>();
@@ -35,5 +39,20 @@ public class ReleveDAO {
         }
 
         return listeReleves;
+    }
+
+    public static long addReleve(LibReleve r, Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        ContentValues value = new ContentValues();
+        value.put(RELEVE_INDEX, r.getIndexReleve());
+        value.put(RELEVE_DATE, ConversionDate.dateToString(r.getDateReleve(), "dd/MM/yyyy"));
+        value.put(RELEVE_COMPTEUR, r.getLeCompteur().getRefCompteur());
+
+        retour = bd.insert("client", null, value);
+        return retour;
     }
 }

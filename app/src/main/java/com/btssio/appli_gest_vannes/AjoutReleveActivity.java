@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +15,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.btssio.appli_gest_vannes.classestechniques.ConversionDate;
+import com.btssio.appli_gest_vannes.passerelle.ReleveDAO;
 import com.sio.libseg.metier.LibCompteurVanne;
+import com.sio.libseg.metier.LibReleve;
 
 public class AjoutReleveActivity extends AppCompatActivity {
 
@@ -65,6 +69,26 @@ public class AjoutReleveActivity extends AppCompatActivity {
                     txtConso.setText("");
                 }
                 return false;
+            }
+        });
+
+        btnAddReleve.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    int newIndex = Integer.parseInt(txtNewIndex.getText().toString());
+
+                    LibReleve leReleve = new LibReleve(ConversionDate.stringToDate(date, "dd/MM/yyyy"), newIndex, laVanne);
+                    ReleveDAO.addReleve(leReleve, AjoutReleveActivity.this);
+
+                    Toast.makeText(AjoutReleveActivity.this, "Ajout du relevé effectué !", Toast.LENGTH_SHORT).show();
+
+                    Intent intentCommunes = new Intent(AjoutReleveActivity.this, ListeCommunes.class);
+                    startActivity(intentCommunes);
+                } catch (Exception e) {
+                    Toast.makeText(AjoutReleveActivity.this, "Une erreur s'est produite...", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         });
     }
