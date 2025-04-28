@@ -18,10 +18,12 @@ import androidx.core.view.WindowInsetsCompat;
 import com.btssio.appli_gest_vannes.classestechniques.ConversionDate;
 import com.btssio.appli_gest_vannes.passerelle.CompteurVanneDAO;
 import com.btssio.appli_gest_vannes.passerelle.ReleveDAO;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sio.libseg.metier.LibCompteurVanne;
 import com.sio.libseg.metier.LibReleve;
 import com.sio.libseg.metier.LibSecteur;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,7 @@ public class ReleveActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        boolean inCurrentYear = false;
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_releve);
@@ -47,7 +50,12 @@ public class ReleveActivity extends AppCompatActivity {
         for (int i = 0; i < listeReleves.size(); i++) {
             element = new HashMap<>();
 
-            element.put("annee", String.valueOf(listeReleves.get(i).getDateReleve().getYear()));
+            int annee =  listeReleves.get(i).getDateReleve().getYear();
+            if (annee == LocalDate.now().getYear()) {
+                inCurrentYear = true;
+            }
+
+            element.put("annee", String.valueOf(annee));
             element.put("index", "Index du relevé : " + listeReleves.get(i).getIndexReleve());
 
             listeValeursMap.add(element);
@@ -55,6 +63,11 @@ public class ReleveActivity extends AppCompatActivity {
         ListAdapter listeAdapter = new SimpleAdapter(this, listeValeursMap, R.layout.layout_releves, new String[]{"annee", "index", },
                 new int[]{R.id.txtReleveAnnee, R.id.txtReleveIndex});
         listeViewReleves.setAdapter(listeAdapter);
+
+        if (inCurrentYear) {
+            FloatingActionButton fab = this.findViewById(R.id.FabAddReleve);
+            fab.hide();
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
