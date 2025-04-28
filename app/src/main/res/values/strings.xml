@@ -9,4 +9,7 @@
     <string name="releve">Liste des Relevés</string>
     <string name="titre_liste_communes">Liste des communes du Gévaudan</string>
     <string name="ajoutReleve">Ajouter un nouveau relevé</string>
+    <string name="newIndex">Nouvel index...</string>
+    <string name="ajoutReleveButton">Enregister le relevé</string>
+    <string name="ajoutReleveLabel">Ajout d\'un relevé</string>
 </resources>

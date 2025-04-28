@@ -13,27 +13,32 @@
         android:theme="@style/Theme.Appli_gest_vannes"
         tools:targetApi="31">
         <activity
+            android:name=".AjoutReleveActivity"
+            android:label="@string/ajoutReleveLabel"
+            android:parentActivityName=".ListeCommunes"
+            android:exported="false" />
+        <activity
             android:name=".ReleveActivity"
-            android:label="@string/releve"
             android:exported="false"
+            android:label="@string/releve"
             android:parentActivityName=".ListeCommunes"
             android:theme="@style/Theme.EmptyView" />
         <activity
             android:name=".ListeVannes"
-            android:label="@string/listeVannes"
             android:exported="false"
+            android:label="@string/listeVannes"
             android:parentActivityName=".ListeCommunes"
             android:theme="@style/Theme.EmptyView" />
         <activity
             android:name=".ListeSecteurs"
-            android:label="@string/listeSecteurs"
             android:exported="false"
+            android:label="@string/listeSecteurs"
             android:parentActivityName=".ListeCommunes"
             android:theme="@style/Theme.EmptyView" />
         <activity
             android:name=".ListeCommunes"
-            android:label="@string/listeCommunes"
             android:exported="false"
+            android:label="@string/listeCommunes"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.EmptyView" />
         <activity
