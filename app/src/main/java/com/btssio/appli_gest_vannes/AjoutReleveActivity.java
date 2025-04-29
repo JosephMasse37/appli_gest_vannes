@@ -50,7 +50,7 @@ public class AjoutReleveActivity extends AppCompatActivity {
 
         txtRefVanne.setText("Référence Vanne : " + laVanne.getRefCompteur());
         txtMarqueVanne.setText("Marque Vanne : " + laVanne.getMarque());
-        txtOldIndex.setText("Ancien Index : " + oldIndex);
+        txtOldIndex.setText("Ancien Index : " + oldIndex + " m³");
         txtDateReleve.setText("Date : " + date);
 
 
@@ -63,7 +63,7 @@ public class AjoutReleveActivity extends AppCompatActivity {
                         txtConso.setText("Nouvel index trop petit.");
                     } else {
                         int conso = newIndex - oldIndex;
-                        txtConso.setText("Consommation : " + conso);
+                        txtConso.setText("Consommation : " + conso + " m³");
                     }
                 } catch (Exception e) {
                     txtConso.setText("");
@@ -78,16 +78,19 @@ public class AjoutReleveActivity extends AppCompatActivity {
                 try {
                     int newIndex = Integer.parseInt(txtNewIndex.getText().toString());
 
-                    LibReleve leReleve = new LibReleve(ConversionDate.stringToDate(date, "dd/MM/yyyy"), newIndex, laVanne);
-                    ReleveDAO.addReleve(leReleve, AjoutReleveActivity.this);
+                    if (newIndex < oldIndex) {
+                        Toast.makeText(AjoutReleveActivity.this, "Erreur : Nouvel index trop petit.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        LibReleve leReleve = new LibReleve(ConversionDate.stringToDate(date, "dd/MM/yyyy"), newIndex, laVanne);
+                        ReleveDAO.addReleve(leReleve, AjoutReleveActivity.this);
 
-                    Toast.makeText(AjoutReleveActivity.this, "Ajout du relevé effectué !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AjoutReleveActivity.this, "Ajout du relevé effectué !", Toast.LENGTH_SHORT).show();
 
-                    Intent intentCommunes = new Intent(AjoutReleveActivity.this, ListeCommunes.class);
-                    startActivity(intentCommunes);
+                        Intent intentCommunes = new Intent(AjoutReleveActivity.this, ListeCommunes.class);
+                        startActivity(intentCommunes);
+                    }
                 } catch (Exception e) {
-                    Toast.makeText(AjoutReleveActivity.this, "Une erreur s'est produite...", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                    Toast.makeText(AjoutReleveActivity.this, "Erreur : Nouvel index nul.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
