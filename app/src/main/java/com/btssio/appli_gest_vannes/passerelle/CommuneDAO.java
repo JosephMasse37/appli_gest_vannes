@@ -33,4 +33,29 @@ public class CommuneDAO {
 
         return listeCommunes;
     }
+
+    public static long deleteCommunes(Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        long retourS = SecteurDAO.deleteSecteurs(ct);
+
+        retour = bd.delete("commune", null,null);
+        return retour;
+    }
+
+    public static ArrayList<LibCommune> communesWS (Context ct) {
+        List<LibCommune> oldCommunes = getArrayCommunes(ct);
+        ArrayList<LibCommune> newCommunes = new ArrayList<>();
+
+        for (LibCommune c : oldCommunes) {
+            LibCommune tempCommune = new LibCommune(c.getNumCom(), c.getNomCom());
+            tempCommune.setListeSecteurs(c.getListeSecteurs());
+            newCommunes.add(tempCommune);
+        }
+
+        return newCommunes;
+    }
 }

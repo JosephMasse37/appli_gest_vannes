@@ -44,6 +44,16 @@ public class SecteurDAO {
         return listeSecteurs;
     }
 
-  
+    public static long deleteSecteurs(Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        long retourV = CompteurVanneDAO.deleteVannes(ct);
+
+        retour = bd.delete("secteur", null,null);
+        return retour;
+    }
 
 }

@@ -55,4 +55,14 @@ public class ReleveDAO {
         retour = bd.insert("releve", null, value);
         return retour;
     }
+
+    public static long deleteReleves(Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        retour = bd.delete("releve", null,null);
+        return retour;
+    }
 }

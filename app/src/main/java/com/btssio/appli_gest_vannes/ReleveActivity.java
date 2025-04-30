@@ -46,44 +46,47 @@ public class ReleveActivity extends AppCompatActivity {
         TextView txtReleve = this.findViewById(R.id.txtListeReleves);
 
         txtReleve.setText("Référence Vanne :  " + laVanne.getRefCompteur());
+        if (listeReleves.isEmpty()) {
+            Intent intentAddReleve = new Intent(ReleveActivity.this, AjoutReleveActivity.class);
+            intentAddReleve.putExtra("date", ConversionDate.dateToString(LocalDate.now(), "dd/MM/yyyy"));
+            intentAddReleve.putExtra("indexReleve", 0);
+            intentAddReleve.putExtra("vanne", laVanne);
 
-        List<HashMap<String, String>> listeValeursMap = new ArrayList<>();
-        HashMap<String, String> element;
-        for (int i = 0; i < listeReleves.size(); i++) {
-            element = new HashMap<>();
-
-            int annee =  listeReleves.get(i).getDateReleve().getYear();
-            if (annee == LocalDate.now().getYear()) {
-                inCurrentYear = true;
-            }
-
-            element.put("annee", String.valueOf(annee));
-            element.put("index", "Index du relevé : " + listeReleves.get(i).getIndexReleve());
-
-            listeValeursMap.add(element);
-        }
-        ListAdapter listeAdapter = new SimpleAdapter(this, listeValeursMap, R.layout.layout_releves, new String[]{"annee", "index"},
-                new int[]{R.id.txtReleveAnnee, R.id.txtReleveIndex});
-        listeViewReleves.setAdapter(listeAdapter);
-
-        if (inCurrentYear) {
-            fab.hide();
+            startActivity(intentAddReleve);
         } else {
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    LocalDate date = LocalDate.now();
-                    int indexReleve = listeReleves.get(0).getIndexReleve();
-                    LibCompteurVanne vanne = listeReleves.get(0).getLeCompteur();
+            List<HashMap<String, String>> listeValeursMap = new ArrayList<>();
+            HashMap<String, String> element;
+            for (int i = 0; i < listeReleves.size(); i++) {
+                element = new HashMap<>();
 
-                    Intent intentAddReleve = new Intent(ReleveActivity.this, AjoutReleveActivity.class);
-                    intentAddReleve.putExtra("date", ConversionDate.dateToString(date, "dd/MM/yyyy"));
-                    intentAddReleve.putExtra("indexReleve", indexReleve);
-                    intentAddReleve.putExtra("vanne", vanne);
+                element.put("annee", String.valueOf(listeReleves.get(i).getDateReleve().getYear()));
+                element.put("index", "Index du relevé : " + listeReleves.get(i).getIndexReleve());
 
-                    startActivity(intentAddReleve);
-                }
-            });
+                listeValeursMap.add(element);
+            }
+            ListAdapter listeAdapter = new SimpleAdapter(this, listeValeursMap, R.layout.layout_releves, new String[]{"annee", "index"},
+                    new int[]{R.id.txtReleveAnnee, R.id.txtReleveIndex});
+            listeViewReleves.setAdapter(listeAdapter);
+
+            if (LocalDate.now().getYear() == listeReleves.get(listeReleves.size()-1).getDateReleve().getYear()) {
+                fab.hide();
+            } else {
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LocalDate date = LocalDate.now();
+                        int indexReleve = listeReleves.get(listeReleves.size()-1).getIndexReleve();
+                        LibCompteurVanne vanne = laVanne;
+
+                        Intent intentAddReleve = new Intent(ReleveActivity.this, AjoutReleveActivity.class);
+                        intentAddReleve.putExtra("date", ConversionDate.dateToString(date, "dd/MM/yyyy"));
+                        intentAddReleve.putExtra("indexReleve", indexReleve);
+                        intentAddReleve.putExtra("vanne", vanne);
+
+                        startActivity(intentAddReleve);
+                    }
+                });
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

@@ -51,4 +51,16 @@ public class CompteurVanneDAO {
 
         return listeCompteursVanne;
     }
+
+    public static long deleteVannes(Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        long retourR = ReleveDAO.deleteReleves(ct);
+
+        retour = bd.delete("vanne", null,null);
+        return retour;
+    }
 }
