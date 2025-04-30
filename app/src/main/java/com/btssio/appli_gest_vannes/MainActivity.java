@@ -5,14 +5,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.btssio.appli_gest_vannes.classestechniques.LocalDateAdapter;
 import com.btssio.appli_gest_vannes.passerelle.CommuneDAO;
 import com.btssio.appli_gest_vannes.passerelle.ReleveDAO;
+import com.btssio.appli_gest_vannes.services.WebServices;
 import com.btssio.appli_gest_vannes.testBD.TestBDCommune;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -21,10 +24,20 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.btssio.appli_gest_vannes.databinding.ActivityMainBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.sio.libseg.metier.LibCommune;
+import com.sio.libseg.metier.LibReleve;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -72,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
             dialogBox.setPositiveButton("Début de période", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Toast.makeText(MainActivity.this,"Début de période confirmée",Toast.LENGTH_SHORT).show();
                     AlertDialog.Builder dialogBoxDebPeriode = new AlertDialog.Builder(MainActivity.this);
 
                     dialogBoxDebPeriode.setTitle("Importer les données - Début de période");
@@ -82,19 +94,76 @@ public class MainActivity extends AppCompatActivity {
                     dialogBoxDebPeriode.setPositiveButton("Toutes les données", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            Toast.makeText(MainActivity.this,"All Data confirmed",Toast.LENGTH_SHORT).show();
-                            CommuneDAO.deleteCommunes(MainActivity.this);
+                            try {
+                                CommuneDAO.deleteCommunes(MainActivity.this);
 
+                                Gson gson = new GsonBuilder()
+                                        .setPrettyPrinting()
+                                        .disableHtmlEscaping()
+                                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                                        .create();
+
+                                // Données des communes, secteurs et vannes
+                                String dataCommunes = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/communes");
+                                Log.i("test", dataCommunes);
+
+                                List<LibCommune> listeCommunes;
+                                Type listeType = new TypeToken<ArrayList<LibCommune>>() {}.getType();
+
+                                listeCommunes = gson.fromJson(dataCommunes, listeType);
+
+                                for (LibCommune c : listeCommunes) {
+                                    CommuneDAO.addCommune(c, MainActivity.this);
+                                }
+
+                                // Données des relevés
+                                String dataReleves = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/releves");
+
+                                List<LibReleve> listeReleves;
+                                Type listeTypeR = new TypeToken<ArrayList<LibReleve>>() {}.getType();
+
+                                listeReleves = gson.fromJson(dataReleves, listeTypeR);
+
+                                for (LibReleve r : listeReleves) {
+                                    ReleveDAO.addReleve(r, MainActivity.this);
+                                }
+
+                                Toast.makeText(MainActivity.this,"Données importées.",Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(MainActivity.this,"Une erreur est survenue lors de l'import..." + e.getMessage(),Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                         }
                     });
 
                     dialogBoxDebPeriode.setNegativeButton("Uniquement les relevés", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ReleveDAO.deleteReleves(MainActivity.this);
+                            try {
+                                ReleveDAO.deleteReleves(MainActivity.this);
 
+                                Gson gson = new GsonBuilder().setPrettyPrinting()
+                                        .disableHtmlEscaping()
+                                        .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                                        .create();
 
-                            Toast.makeText(MainActivity.this,"Table relevé confirmée",Toast.LENGTH_SHORT).show();
+                                // Appel Relevés
+                                String dataReleves = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/releves");
+
+                                List<LibReleve> listeReleves;
+                                Type listeType = new TypeToken<ArrayList<LibReleve>>() {}.getType();
+
+                                listeReleves = gson.fromJson(dataReleves, listeType);
+
+                                for (LibReleve r : listeReleves) {
+                                    ReleveDAO.addReleve(r, MainActivity.this);
+                                }
+
+                                Toast.makeText(MainActivity.this,"Données importées.",Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(MainActivity.this,"Une erreur est survenue lors de l'import..." + e.getMessage(),Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -111,7 +180,16 @@ public class MainActivity extends AppCompatActivity {
             dialogBox.setNegativeButton("En cours de période", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(MainActivity.this,"En cours de période confirmée",Toast.LENGTH_SHORT).show();
+                    try {
+                        ReleveDAO.deleteRelevesNotInCurrentYear(MainActivity.this);
+
+
+
+                        Toast.makeText(MainActivity.this,"Importation réussie.",Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this,"Une erreur est survenue...",Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                 }
             });
 

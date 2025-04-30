@@ -1,5 +1,7 @@
 package com.btssio.appli_gest_vannes.services;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

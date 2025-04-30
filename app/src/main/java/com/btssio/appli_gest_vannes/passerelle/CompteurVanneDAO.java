@@ -1,5 +1,6 @@
 package com.btssio.appli_gest_vannes.passerelle;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,16 +8,17 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.btssio.appli_gest_vannes.classestechniques.ConversionDate;
 import com.sio.libseg.metier.LibCompteurVanne;
+import com.sio.libseg.metier.LibSecteur;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sio on 14/01/2025.
+ * Created by Joseph Massé on 14/01/2025.
  */
 public class CompteurVanneDAO {
 
-    public static final String VANNE_KEY = "_id";
+    public static final String VANNE_KEY = "ref";
     public static final String VANNE_DATE = "dateInstallation";
     public static final String VANNE_MARQUE = "marque";
     public static final String VANNE_SECTEUR = "idSecteur";
@@ -50,6 +52,21 @@ public class CompteurVanneDAO {
         }
 
         return listeCompteursVanne;
+    }
+
+    public static long addVanne(LibCompteurVanne v, int idSecteur, Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        ContentValues value = new ContentValues();
+        value.put(VANNE_KEY, v.getRefCompteur());
+        value.put(VANNE_MARQUE, v.getMarque());
+        value.put(VANNE_DATE, ConversionDate.dateToString(v.getDateInstallation(),"dd/MM/yyyy"));
+        value.put(VANNE_SECTEUR, idSecteur);
+        retour = bd.insert("vanne", null, value);
+
+        return retour;
     }
 
     public static long deleteVannes(Context ct) {

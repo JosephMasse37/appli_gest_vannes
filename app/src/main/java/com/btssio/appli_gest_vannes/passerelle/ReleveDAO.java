@@ -65,4 +65,14 @@ public class ReleveDAO {
         retour = bd.delete("releve", null,null);
         return retour;
     }
+
+    public static long deleteRelevesNotInCurrentYear(Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        long retour;
+
+        SQLiteDatabase bd = accesBD.getWritableDatabase();
+
+        retour = bd.delete("releve", "substr("+ RELEVE_DATE + ", 7, 4) != '2025'", null);
+        return retour;
+    }
 }
