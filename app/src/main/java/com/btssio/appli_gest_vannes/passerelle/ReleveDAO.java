@@ -10,6 +10,7 @@ import com.sio.libseg.metier.LibCommune;
 import com.sio.libseg.metier.LibCompteurVanne;
 import com.sio.libseg.metier.LibReleve;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class ReleveDAO {
         // l'accès à la base sera en lecture
         SQLiteDatabase bd = accesBD.getReadableDatabase();
 
-        String req = "select dateReleve, indexR from Releve where ref = '" + leCompteur.getRefCompteur() + "';";
+        String req = "select " + RELEVE_DATE + ", " + RELEVE_INDEX + " from Releve where ref = '" +
+                leCompteur.getRefCompteur() + "' order by substr("+ RELEVE_DATE + ", 7, 4) asc;";
         curseurReleves = bd.rawQuery(req, null);
 
         curseurReleves.moveToFirst();
@@ -72,7 +74,7 @@ public class ReleveDAO {
 
         SQLiteDatabase bd = accesBD.getWritableDatabase();
 
-        retour = bd.delete("releve", "substr("+ RELEVE_DATE + ", 7, 4) != '2025'", null);
+        retour = bd.delete("releve", "substr("+ RELEVE_DATE + ", 7, 4) != '" + LocalDate.now().getYear() + "'", null);
         return retour;
     }
 }

@@ -77,10 +77,11 @@ public class MainActivity extends AppCompatActivity {
             AlertDialog.Builder dialogBox = new AlertDialog.Builder(MainActivity.this);
 
             dialogBox.setTitle("Importer les données");
-            dialogBox.setMessage("Veuillez choisir la méthode d'importation. \n\nEn cas de début de " +
-                    "période, les données seront totalement mises à jour, toutes données " +
-                    "non-exportées seront perdues. \n\nEn cas de cours de période, seules les données " +
-                    "des relevés seront importées, toutes données non-exportées seront perdues.");
+            dialogBox.setMessage("Veuillez choisir la méthode d'importation : \n\n - Lors du " +
+                    "début de période, les données seront totalement mises à jour. \nToutes " +
+                    "données non-exportées seront perdues. \n\n - Lorsque la période est en " +
+                    "cours, seules les données des relevés seront importées sans supprimé celles " +
+                    "de l'année en cours. \nToutes données non-exportées seront perdues.");
 
             dialogBox.setPositiveButton("Début de période", new DialogInterface.OnClickListener() {
                 @Override
@@ -183,7 +184,22 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         ReleveDAO.deleteRelevesNotInCurrentYear(MainActivity.this);
 
+                        Gson gson = new GsonBuilder().setPrettyPrinting()
+                                .disableHtmlEscaping()
+                                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                                .create();
 
+                        // Appel Relevés
+                        String dataReleves = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/releves");
+
+                        List<LibReleve> listeReleves;
+                        Type listeType = new TypeToken<ArrayList<LibReleve>>() {}.getType();
+
+                        listeReleves = gson.fromJson(dataReleves, listeType);
+
+                        for (LibReleve r : listeReleves) {
+                            ReleveDAO.addReleve(r, MainActivity.this);
+                        }
 
                         Toast.makeText(MainActivity.this,"Importation réussie.",Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {

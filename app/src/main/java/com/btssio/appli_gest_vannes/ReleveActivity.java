@@ -60,7 +60,7 @@ public class ReleveActivity extends AppCompatActivity {
                 element = new HashMap<>();
 
                 element.put("annee", String.valueOf(listeReleves.get(i).getDateReleve().getYear()));
-                element.put("index", "Index du relevé : " + listeReleves.get(i).getIndexReleve());
+                element.put("index", "Index du relevé : " + listeReleves.get(i).getIndexReleve() + " m³");
 
                 listeValeursMap.add(element);
             }
