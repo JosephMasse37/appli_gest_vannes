@@ -82,7 +82,7 @@ public class AjoutReleveActivity extends AppCompatActivity {
                         Toast.makeText(AjoutReleveActivity.this, "Erreur : Nouvel index trop petit.", Toast.LENGTH_SHORT).show();
                     } else {
                         LibReleve leReleve = new LibReleve(ConversionDate.stringToDate(date, "dd/MM/yyyy"), newIndex, laVanne);
-                        ReleveDAO.addReleve(leReleve, AjoutReleveActivity.this);
+                        ReleveDAO.addReleve(leReleve, 0, AjoutReleveActivity.this);
 
                         Toast.makeText(AjoutReleveActivity.this, "Ajout du relevé effectué !", Toast.LENGTH_SHORT).show();
 

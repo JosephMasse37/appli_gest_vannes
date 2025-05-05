@@ -73,9 +73,9 @@ public class WebServices {
                     writer.flush();
 
                     if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_CREATED) {
-                        resultat[0] = "Enregistrement réussi";
+                        resultat[0] = "Exportation réussie";
                     } else {
-                        resultat[0] = "Erreur Enregistrement : " + httpURLConnection.getResponseMessage();
+                        resultat[0] = "Erreur lors de l'export : " + httpURLConnection.getResponseMessage();
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();

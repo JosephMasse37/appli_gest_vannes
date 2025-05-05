@@ -32,7 +32,8 @@ public class BdSQLiteOpenHelper extends SQLiteOpenHelper {
     private String requeteCreateReleve = "create table releve ( "
             + " 	dateReleve text NOT NULL, "
             + " 	indexR long NOT NULL, "
-            + " 	ref text NOT NULL "
+            + " 	ref text NOT NULL, "
+            + " 	exportee integer DEFAULT 1 NOT NULL "
             + " )";
 
     public BdSQLiteOpenHelper(Context context, String name, CursorFactory factory, int version) {
@@ -84,16 +85,15 @@ public class BdSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("insert into vanne values('V256478',5,'28/04/2012','SAPPEL');");
 
 
-        db.execSQL("insert into releve values ('23/02/2024',62211,'V458965');");
-        db.execSQL("insert into releve values ('23/02/2024',89230,'V589634');");
-        db.execSQL("insert into releve values ('24/02/2024',15896,'V152634');");
-        db.execSQL("insert into releve values ('24/02/2024',42910,'V789521');");
-        db.execSQL("insert into releve values ('24/02/2024',75698,'V125614');");
-        db.execSQL("insert into releve values ('25/02/2024',53189,'V785024');");
-        db.execSQL("insert into releve values ('25/02/2024',66325,'V236974');");
-        db.execSQL("insert into releve values ('19/03/2024',27800,'V256478');");
-        db.execSQL("insert into releve values ('17/02/2025',45963,'V256478');");
-
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('23/02/2024',62211,'V458965');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('23/02/2024',89230,'V589634');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('24/02/2024',15896,'V152634');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('24/02/2024',42910,'V789521');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('24/02/2024',75698,'V125614');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('25/02/2024',53189,'V785024');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('25/02/2024',66325,'V236974');");
+        db.execSQL("insert into releve(dateReleve, indexR, ref) values ('19/03/2024',27800,'V256478');");
+        db.execSQL("insert into releve values ('17/02/2025',45963,'V256478', 0);");
     }
 
 

@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 // Données des communes, secteurs et vannes
                                 String dataCommunes = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/communes");
-                                Log.i("test", dataCommunes);
 
                                 List<LibCommune> listeCommunes;
                                 Type listeType = new TypeToken<ArrayList<LibCommune>>() {}.getType();
@@ -126,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                                 listeReleves = gson.fromJson(dataReleves, listeTypeR);
 
                                 for (LibReleve r : listeReleves) {
-                                    ReleveDAO.addReleve(r, MainActivity.this);
+                                    ReleveDAO.addReleve(r, 1, MainActivity.this);
                                 }
 
                                 Toast.makeText(MainActivity.this,"Données importées.",Toast.LENGTH_SHORT).show();
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                                 listeReleves = gson.fromJson(dataReleves, listeType);
 
                                 for (LibReleve r : listeReleves) {
-                                    ReleveDAO.addReleve(r, MainActivity.this);
+                                    ReleveDAO.addReleve(r, 1, MainActivity.this);
                                 }
 
                                 Toast.makeText(MainActivity.this,"Données importées.",Toast.LENGTH_SHORT).show();
@@ -198,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         listeReleves = gson.fromJson(dataReleves, listeType);
 
                         for (LibReleve r : listeReleves) {
-                            ReleveDAO.addReleve(r, MainActivity.this);
+                            ReleveDAO.addReleve(r, 0, MainActivity.this);
                         }
 
                         Toast.makeText(MainActivity.this,"Importation réussie.",Toast.LENGTH_SHORT).show();
@@ -216,6 +215,45 @@ public class MainActivity extends AppCompatActivity {
             });
 
             dialogBox.show();
+        }
+
+        if (id == R.id.menu_export) {
+            AlertDialog.Builder dialogBoxExport = new AlertDialog.Builder(MainActivity.this);
+
+            dialogBoxExport.setTitle("Exporter les données");
+            dialogBoxExport.setMessage("Vous confirmez vouloir exporter vos relevés ?");
+
+            dialogBoxExport.setPositiveButton("Exporter les données", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    try {
+                        Gson gson = new GsonBuilder()
+                                .setPrettyPrinting()
+                                .disableHtmlEscaping()
+                                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                                .create();
+
+                        String data = gson.toJson(ReleveDAO.getRelevesWS(MainActivity.this));
+
+                        String resultat = WebServices.enregistrerDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/releves", data);
+
+                        Log.i("test", resultat);
+
+                        Toast.makeText(MainActivity.this,"Données exportées.",Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this,"Une erreur est survenue lors de l'export..." + e.getMessage(),Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            dialogBoxExport.setNeutralButton("Annuler", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            dialogBoxExport.show();
         }
 
         return super.onOptionsItemSelected(item);

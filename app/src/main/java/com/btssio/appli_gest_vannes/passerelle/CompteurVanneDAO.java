@@ -54,6 +54,27 @@ public class CompteurVanneDAO {
         return listeCompteursVanne;
     }
 
+    public static LibCompteurVanne getUnCompteurVanne(String ref, Context ct) {
+        BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
+        LibCompteurVanne laVanne = null;
+        Cursor curseurCompteurs;
+
+        // l'accès à la base sera en lecture
+        SQLiteDatabase bd = accesBD.getReadableDatabase();
+
+        String req = "select ref, dateInstallation, marque from vanne where ref ='" + ref + "';";
+        curseurCompteurs = bd.rawQuery(req, null);
+
+
+        if (curseurCompteurs.getCount() > 0) {
+            curseurCompteurs.moveToFirst();
+            laVanne = new LibCompteurVanne(curseurCompteurs.getString(0),
+                    ConversionDate.stringToDate(curseurCompteurs.getString(1),"dd/MM/yyyy"),
+                    curseurCompteurs.getString(2));
+        }
+        return laVanne;
+    }
+
     public static long addVanne(LibCompteurVanne v, int idSecteur, Context ct) {
         BdSQLiteOpenHelper accesBD = ConnexionDAO.getAccesBD(ct);
         long retour;
