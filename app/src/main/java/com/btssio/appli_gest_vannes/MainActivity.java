@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    private final String ipWebService = "SA408P7";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                         .create();
 
                                 // Données des communes, secteurs et vannes
-                                String dataCommunes = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/communes");
+                                String dataCommunes = WebServices.chargeDonnees("http://" + ipWebService + ":8080/wsgestionvannes_joseph/resources/communes");
 
                                 List<LibCommune> listeCommunes;
                                 Type listeType = new TypeToken<ArrayList<LibCommune>>() {}.getType();
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 // Données des relevés
-                                String dataReleves = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/releves");
+                                String dataReleves = WebServices.chargeDonnees("http://" + ipWebService + ":8080/wsgestionvannes_joseph/resources/releves");
 
                                 List<LibReleve> listeReleves;
                                 Type listeTypeR = new TypeToken<ArrayList<LibReleve>>() {}.getType();
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                                         .create();
 
                                 // Appel Relevés
-                                String dataReleves = WebServices.chargeDonnees("http://172.16.30.132:8080/wsgestionvannes_joseph/resources/releves");
+                                String dataReleves = WebServices.chargeDonnees("http://" + ipWebService + ":8080/wsgestionvannes_joseph/resources/releves");
 
                                 List<LibReleve> listeReleves;
                                 Type listeType = new TypeToken<ArrayList<LibReleve>>() {}.getType();
